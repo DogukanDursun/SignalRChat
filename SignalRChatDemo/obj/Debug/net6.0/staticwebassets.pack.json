@@ -13,6 +13,22 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\hp\\source\\repos\\SignalRChatDemo\\SignalRChatDemo\\wwwroot\\images\\avatar.png",
+      "PackagePath": "staticwebassets\\images\\avatar.png"
+    },
+    {
+      "Id": "C:\\Users\\hp\\source\\repos\\SignalRChatDemo\\SignalRChatDemo\\wwwroot\\images\\kedi.png",
+      "PackagePath": "staticwebassets\\images\\kedi.png"
+    },
+    {
+      "Id": "C:\\Users\\hp\\source\\repos\\SignalRChatDemo\\SignalRChatDemo\\wwwroot\\images\\kopek.png",
+      "PackagePath": "staticwebassets\\images\\kopek.png"
+    },
+    {
+      "Id": "C:\\Users\\hp\\source\\repos\\SignalRChatDemo\\SignalRChatDemo\\wwwroot\\images\\tavsan.jpg",
+      "PackagePath": "staticwebassets\\images\\tavsan.jpg"
+    },
+    {
       "Id": "C:\\Users\\hp\\source\\repos\\SignalRChatDemo\\SignalRChatDemo\\wwwroot\\js\\signalr\\README.md",
       "PackagePath": "staticwebassets\\js\\signalr\\README.md"
     },

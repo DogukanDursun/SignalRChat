@@ -1,28 +1,52 @@
 ﻿@page
+@model IndexModel
 <div class="container">
     <div class="row p-1">
-        <div class="col-1">User</div>
-        <div class="col-5"><input type="text" id="userInput" /></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-1">Message</div>
-        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6 text-end">
-            <input type="button" id="sendButton" value="Send Message" />
+        <div class="col-2">Kullanıcı Adı</div>
+        <div class="col-6">
+            <input type="text" id="usernameInput" class="form-control" />
         </div>
     </div>
     <div class="row p-1">
+        <div class="col-2">Şifre</div>
         <div class="col-6">
+            <input type="password" id="passwordInput" class="form-control" />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-8">
             <hr />
         </div>
     </div>
     <div class="row p-1">
-        <div class="col-6">
-            <ul id="messagesList"></ul>
+        <div class="col-8 text-end">
+            <button id="loginButton" class="btn btn-primary">Giriş Yap</button>
         </div>
     </div>
 </div>
+
+
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js"></script>
+<script>
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+    connection.start().then(function () {
+        document.getElementById("loginButton").addEventListener("click", function (event) {
+            var username = document.getElementById("usernameInput").value;
+            var password = document.getElementById("passwordInput").value;
+            connection.invoke("Login", username, password).catch(function (err) {
+                return console.error(err.toString());
+            });
+
+            event.preventDefault();
+        });
+
+        // Kullanıcı giriş yapıldığında yönlendirme işlemi
+        connection.on("RedirectToMessages", function () {
+            window.location.href = "/Message?username=" + encodeURIComponent(document.getElementById("usernameInput").value); // Yönlendirme işlemi
+
+        });
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+</script>

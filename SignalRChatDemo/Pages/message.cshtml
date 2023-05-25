@@ -1,0 +1,130 @@
+﻿@page
+@using Microsoft.AspNetCore.SignalR
+@model IndexModel
+@{
+    ViewData["Title"] = "Message";
+}
+
+<div class="container">
+    <div class="row p-1">
+        <div class="col-2">User</div>
+        <div class="col-6">
+         <input type="text" id="userInput" class="form-control" value="@Request.Query["username"]" disabled />
+
+        </div>
+    </div>
+
+
+
+
+    <div class="row p-1">
+        <div class="col-6">
+            <hr />
+        </div>
+    </div>
+
+    <div class="row p-1">
+        <div class="col-2">Room</div>
+        <div class="col-6">
+            <select id="roomSelect" class="form-control">
+                <option value="room1">Room 1</option>
+                <option value="room2">Room 2</option>
+                <option value="room3">Room 3</option>
+            </select>
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-8">
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="row p-1">
+    <div class="col-2">Message</div>
+    <div class="col-6">
+        <textarea id="messageInput" class="form-control"></textarea>
+    </div>
+</div>
+<div class="row p-1">
+    <div class="col-8 text-end">
+        <button id="sendButton" class="btn btn-primary">Send Message</button>
+    </div>
+</div>
+<div class="row p-1">
+    <div class="col-8">
+        <hr />
+    </div>
+</div>
+<div class="row p-1">
+    <div class="col-8">
+        <ul id="messagesList" class="my-custom-class"></ul>
+    </div>
+</div>
+
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
+<script>
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+    // Mesaj alma işlemi
+    connection.on("ReceiveMessage", function (user, message, room) {
+        var encodedUser = user;
+        var encodedMessage = message;
+        var encodedRoom = room;
+
+        var listItem = document.createElement("ul");
+
+        var img = document.createElement("img");
+        img.src = "/images/avatar.png";
+        img.alt = "Avatar";
+        img.classList.add("avatar");
+        img.style.width = "30px"; // Resmi 50 piksel genişliğinde ayarladım
+        img.style.height = "30px"; // Resmi 50 piksel yüksekliğinde ayarladım
+
+        var messageContent = document.createElement("span");
+        messageContent.textContent = encodedUser + " (" + encodedRoom + "): " + encodedMessage;
+        messageContent.classList.add("message-content");
+
+        listItem.appendChild(img);
+        listItem.appendChild(messageContent);
+
+        document.getElementById("messagesList").appendChild(listItem);
+
+        var paragraph = document.createElement("p");
+        paragraph.classList.add("message-space"); // Özel bir sınıf ekle
+
+        // Mesaj listesine paragrafı ekle
+        document.getElementById("messagesList").appendChild(paragraph);
+    });
+
+    connection.start().then(function () {
+        document.getElementById("sendButton").addEventListener("click", function (event) {
+            var user = document.getElementById("userInput").value;
+            var message = document.getElementById("messageInput").value;
+            var room = document.getElementById("roomSelect").value;
+            connection.invoke("SendMessage", user, message, room).catch(function (err) {
+                return console.error(err.toString());
+            });
+
+            // Mesaj gönderildikten sonra mesaj penceresini temizle
+            document.getElementById("messageInput").value = "";
+
+            event.preventDefault();
+        });
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+
+</script>
+<style>
+    .my-custom-class {
+        /* Özelleştirmeleri burada yapabilirsiniz */
+    }
+
+    .message-space {
+        margin-top: 10px;
+    }
+</style>
